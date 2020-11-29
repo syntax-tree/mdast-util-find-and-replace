@@ -131,9 +131,9 @@ abide by its terms.
 
 <!-- Definition -->
 
-[build-badge]: https://img.shields.io/travis/syntax-tree/mdast-util-find-and-replace.svg
+[build-badge]: https://github.com/syntax-tree/mdast-util-find-and-replace/workflows/main/badge.svg
 
-[build]: https://travis-ci.org/syntax-tree/mdast-util-find-and-replace
+[build]: https://github.com/syntax-tree/mdast-util-find-and-replace/actions
 
 [coverage-badge]: https://img.shields.io/codecov/c/github/syntax-tree/mdast-util-find-and-replace.svg
 

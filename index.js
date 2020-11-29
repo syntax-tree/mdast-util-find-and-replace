@@ -60,7 +60,7 @@ function findAndReplace(tree, find, replace, options) {
             nodes.push({type: 'text', value: node.value.slice(start, position)})
           }
 
-          if (typeof value === 'string' && value.length !== 0) {
+          if (typeof value === 'string' && value.length > 0) {
             value = {type: 'text', value: value}
           }
 
