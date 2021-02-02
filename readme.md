@@ -88,8 +88,9 @@ Partial matches are not supported.
     — Value to insert.
     When `string`, turned into a [`Text`][text] node.
     When `Function`, invoked with the results of calling `RegExp.exec` as
-    arguments, in which case it can return a [`Node`][node], a `string` (which
-    is wrapped in a [`Text`][text] node), or `false` to not replace
+    arguments, in which case it can return a single or a list of [`Node`][node],
+    a `string` (which is wrapped in a [`Text`][text] node), or `false` to not
+    replace
 *   `search` (`Object` or `Array`)
     — Perform multiple find-and-replaces.
     When `Array`, each entry is a tuple (`Array`) of a `find` (at `0`) and

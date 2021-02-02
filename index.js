@@ -65,7 +65,7 @@ function findAndReplace(tree, find, replace, options) {
           }
 
           if (value) {
-            nodes.push(value)
+            nodes = [].concat(nodes, value)
           }
 
           start = position + match[0].length
