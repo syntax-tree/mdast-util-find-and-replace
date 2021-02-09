@@ -14,7 +14,7 @@ function findAndReplace(tree, find, replace, options) {
 
   if (
     typeof find === 'string' ||
-    (find && typeof find.lastIndex === 'number')
+    (find && typeof find.exec === 'function')
   ) {
     schema = [[find, replace]]
   } else {
