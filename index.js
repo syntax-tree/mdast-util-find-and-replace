@@ -1,14 +1,11 @@
-'use strict'
+import escape from 'escape-string-regexp'
+import {visitParents} from 'unist-util-visit-parents'
+import {convert} from 'unist-util-is'
 
-module.exports = findAndReplace
-
-var visit = require('unist-util-visit-parents')
-var convert = require('unist-util-is/convert')
-var escape = require('escape-string-regexp')
-
+var own = {}.hasOwnProperty
 var splice = [].splice
 
-function findAndReplace(tree, find, replace, options) {
+export function findAndReplace(tree, find, replace, options) {
   var settings
   var schema
 
@@ -47,10 +44,7 @@ function findAndReplace(tree, find, replace, options) {
 
       while (match) {
         position = match.index
-        value = replace.apply(
-          null,
-          [].concat(match, {index: match.index, input: match.input})
-        )
+        value = replace(...match, {index: match.index, input: match.input})
 
         if (value !== false) {
           if (start !== position) {
@@ -58,7 +52,7 @@ function findAndReplace(tree, find, replace, options) {
           }
 
           if (typeof value === 'string' && value.length > 0) {
-            value = {type: 'text', value: value}
+            value = {type: 'text', value}
           }
 
           if (value) {
@@ -111,7 +105,7 @@ function search(tree, settings, handler) {
   var ignored = convert(settings.ignore || [])
   var result = []
 
-  visit(tree, 'text', visitor)
+  visitParents(tree, 'text', visitor)
 
   return result
 
@@ -146,7 +140,7 @@ function toPairs(schema) {
   var index
 
   if (typeof schema !== 'object') {
-    throw new Error('Expected array or object as schema')
+    throw new TypeError('Expected array or object as schema')
   }
 
   if ('length' in schema) {
@@ -160,7 +154,9 @@ function toPairs(schema) {
     }
   } else {
     for (key in schema) {
-      result.push([toExpression(key), toFunction(schema[key])])
+      if (own.call(schema, key)) {
+        result.push([toExpression(key), toFunction(schema[key])])
+      }
     }
   }
 

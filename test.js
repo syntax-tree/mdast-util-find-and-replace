@@ -1,15 +1,13 @@
-'use strict'
-
-var test = require('tape')
-var u = require('unist-builder')
-var findAndReplace = require('.')
+import test from 'tape'
+import {u} from 'unist-builder'
+import {findAndReplace} from './index.js'
 
 test('findAndReplace', function (t) {
   t.throws(
     function () {
       findAndReplace(create(), true)
     },
-    /^Error: Expected array or object as schema$/,
+    /^TypeError: Expected array or object as schema$/,
     'should throw on invalid search and replaces'
   )
 
@@ -122,7 +120,7 @@ test('findAndReplace', function (t) {
 
   t.deepEqual(
     findAndReplace(create(), {
-      emphasis: function () {
+      emphasis() {
         return u('link', [u('text', 'importance')])
       },
       importance: 'something else'
@@ -166,13 +164,13 @@ test('findAndReplace', function (t) {
     findAndReplace(
       u('paragraph', [u('text', 'Some emphasis, importance, and code.')]),
       {
-        importance: function (value) {
+        importance(value) {
           return u('strong', [u('text', value)])
         },
-        code: function (value) {
+        code(value) {
           return u('inlineCode', value)
         },
-        emphasis: function (value) {
+        emphasis(value) {
           return u('emphasis', [u('text', value)])
         }
       }
