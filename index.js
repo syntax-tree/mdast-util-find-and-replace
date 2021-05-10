@@ -1,6 +1,6 @@
 /**
- * @typedef Options
- * @property {Test} [ignore]
+ * @typedef Options Configuration.
+ * @property {Test} [ignore] `unist-util-is` test used to assert parents
  *
  * @typedef {import('mdast').Text} Text
  * @typedef {import('mdast').Parent} Parent
@@ -27,16 +27,8 @@
  */
 
 /**
- * @callback Handler
- * @param {Text} node
- * @param {Parent} parent
- * @returns {VisitorResult}
- */
-
-/**
  * @callback ReplaceFunction
- * @param {...string} parameters
- * @param {RegExpMatchObject} matchObject
+ * @param {...unknown} parameters
  * @returns {Array.<PhrasingContent>|PhrasingContent|string|false|undefined|null}
  */
 
@@ -47,168 +39,157 @@ import {convert} from 'unist-util-is'
 var own = {}.hasOwnProperty
 
 /**
- * @param {Node} tree
- * @param {Find|FindAndReplaceSchema|FindAndReplaceList} find
- * @param {Replace|Options} [replace]
- * @param {Options} [options]
+ * @param tree mdast tree
+ * @param find Value to find and remove. When `string`, escaped and made into a global `RegExp`
+ * @param [replace] Value to insert.
+ *   * When `string`, turned into a Text node.
+ *   * When `Function`, called with the results of calling `RegExp.exec` as
+ *     arguments, in which case it can return a single or a list of `Node`,
+ *     a `string` (which is wrapped in a `Text` node), or `false` to not replace
+ * @param [options] Configuration.
  */
-export function findAndReplace(tree, find, replace, options) {
-  /** @type {Options} */
-  var settings
-  /** @type {FindAndReplaceSchema|FindAndReplaceList} */
-  var schema
-
-  if (typeof find === 'string' || find instanceof RegExp) {
-    // @ts-expect-error don’t expect options twice.
-    schema = [[find, replace]]
-    settings = options
-  } else {
-    schema = find
-    // @ts-expect-error don’t expect replace twice.
-    settings = replace
-  }
-
-  if (!settings) {
-    settings = {}
-  }
-
-  search(tree, settings, handlerFactory(toPairs(schema)))
-
-  return tree
-
+export const findAndReplace =
   /**
-   * @param {Pairs} pairs
-   * @returns {Handler}
-   */
-  function handlerFactory(pairs) {
-    var pair = pairs[0]
-
-    return handler
-
+   * @type {(
+   *   ((tree: Node, find: Find, replace?: Replace, options?: Options) => Node) &
+   *   ((tree: Node, schema: FindAndReplaceSchema|FindAndReplaceList, options?: Options) => Node)
+   * )}
+   **/
+  (
     /**
-     * @type {Handler}
+     * @param {Node} tree
+     * @param {Find|FindAndReplaceSchema|FindAndReplaceList} find
+     * @param {Replace|Options} [replace]
+     * @param {Options} [options]
      */
-    function handler(node, parent) {
-      var find = pair[0]
-      var replace = pair[1]
-      /** @type {Array.<PhrasingContent>} */
-      var nodes = []
-      var start = 0
-      var index = parent.children.indexOf(node)
-      /** @type {number} */
-      var position
-      /** @type {RegExpMatchArray} */
-      var match
-      /** @type {Handler} */
-      var subhandler
-      /** @type {PhrasingContent} */
-      var child
-      /** @type {Array.<PhrasingContent>|PhrasingContent|string|false|undefined|null} */
-      var value
+    function (tree, find, replace, options) {
+      /** @type {Options} */
+      var settings
+      /** @type {FindAndReplaceSchema|FindAndReplaceList} */
+      var schema
 
-      find.lastIndex = 0
+      if (typeof find === 'string' || find instanceof RegExp) {
+        // @ts-expect-error don’t expect options twice.
+        schema = [[find, replace]]
+        settings = options
+      } else {
+        schema = find
+        // @ts-expect-error don’t expect replace twice.
+        settings = replace
+      }
 
-      match = find.exec(node.value)
+      if (!settings) {
+        settings = {}
+      }
 
-      while (match) {
-        position = match.index
-        // @ts-expect-error this is perfectly fine, typescript.
-        value = replace(...match, {index: position, input: match.input})
+      var ignored = convert(settings.ignore || [])
+      var pairs = toPairs(schema)
+      var pairIndex = -1
 
-        if (typeof value === 'string' && value.length > 0) {
-          value = {type: 'text', value}
-        }
+      while (++pairIndex < pairs.length) {
+        visitParents(tree, 'text', visitor)
+      }
 
-        if (value !== false) {
-          if (start !== position) {
-            nodes.push({type: 'text', value: node.value.slice(start, position)})
+      return tree
+
+      /** @type {import('unist-util-visit-parents').Visitor<Text>} */
+      function visitor(node, parents) {
+        var index = -1
+        /** @type {Parent} */
+        var parent
+        /** @type {Parent} */
+        var grandparent
+
+        while (++index < parents.length) {
+          // @ts-expect-error mdast vs. unist parent.
+          parent = parents[index]
+
+          if (
+            ignored(
+              parent,
+              // @ts-expect-error mdast vs. unist parent.
+              grandparent ? grandparent.children.indexOf(parent) : undefined,
+              grandparent
+            )
+          ) {
+            return
           }
 
-          if (value) {
-            nodes = [].concat(nodes, value)
-          }
-
-          start = position + match[0].length
+          grandparent = parent
         }
 
-        if (!find.global) {
-          break
-        }
+        return handler(node, grandparent)
+      }
+
+      /**
+       * @param {Text} node
+       * @param {Parent} parent
+       * @returns {VisitorResult}
+       */
+      function handler(node, parent) {
+        var find = pairs[pairIndex][0]
+        var replace = pairs[pairIndex][1]
+        /** @type {Array.<PhrasingContent>} */
+        var nodes = []
+        var start = 0
+        var index = parent.children.indexOf(node)
+        /** @type {number} */
+        var position
+        /** @type {RegExpMatchArray} */
+        var match
+        /** @type {Array.<PhrasingContent>|PhrasingContent|string|false|undefined|null} */
+        var value
+
+        find.lastIndex = 0
 
         match = find.exec(node.value)
-      }
 
-      if (position === undefined) {
-        nodes = [node]
-        index--
-      } else {
-        if (start < node.value.length) {
-          nodes.push({type: 'text', value: node.value.slice(start)})
-        }
+        while (match) {
+          position = match.index
+          // @ts-expect-error this is perfectly fine, typescript.
+          value = replace(...match, {index: match.index, input: match.input})
 
-        parent.children.splice(index, 1, ...nodes)
-      }
-
-      if (pairs.length > 1) {
-        subhandler = handlerFactory(pairs.slice(1))
-        position = -1
-
-        while (++position < nodes.length) {
-          child = nodes[position]
-
-          if (child.type === 'text') {
-            subhandler(child, parent)
-          } else {
-            search(child, settings, subhandler)
+          if (typeof value === 'string' && value.length > 0) {
+            value = {type: 'text', value}
           }
+
+          if (value !== false) {
+            if (start !== position) {
+              nodes.push({
+                type: 'text',
+                value: node.value.slice(start, position)
+              })
+            }
+
+            if (value) {
+              nodes = [].concat(nodes, value)
+            }
+
+            start = position + match[0].length
+          }
+
+          if (!find.global) {
+            break
+          }
+
+          match = find.exec(node.value)
         }
+
+        if (position === undefined) {
+          nodes = [node]
+          index--
+        } else {
+          if (start < node.value.length) {
+            nodes.push({type: 'text', value: node.value.slice(start)})
+          }
+
+          parent.children.splice(index, 1, ...nodes)
+        }
+
+        return index + nodes.length + 1
       }
-
-      return index + nodes.length + 1
     }
-  }
-}
-
-/**
- * @param {Node} tree
- * @param {Options} options
- * @param {Handler} handler
- * @returns {void}
- */
-function search(tree, options, handler) {
-  var ignored = convert(options.ignore || [])
-
-  visitParents(tree, 'text', visitor)
-
-  /** @type {import('unist-util-visit-parents').Visitor<Text>} */
-  function visitor(node, parents) {
-    var index = -1
-    /** @type {Parent} */
-    var parent
-    /** @type {Parent} */
-    var grandparent
-
-    while (++index < parents.length) {
-      // @ts-expect-error mdast vs. unist parent.
-      parent = parents[index]
-
-      if (
-        ignored(
-          parent,
-          // @ts-expect-error mdast vs. unist parent.
-          grandparent ? grandparent.children.indexOf(parent) : undefined,
-          grandparent
-        )
-      ) {
-        return
-      }
-
-      grandparent = parent
-    }
-
-    return handler(node, grandparent)
-  }
-}
+  )
 
 /**
  * @param {FindAndReplaceSchema|FindAndReplaceList} schema

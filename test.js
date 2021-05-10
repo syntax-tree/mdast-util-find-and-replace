@@ -41,9 +41,13 @@ test('findAndReplace', function (t) {
   )
 
   t.deepEqual(
-    findAndReplace(create(), /em(\w+)is/, function ($0, $1) {
-      return '[' + $1 + ']'
-    }),
+    findAndReplace(
+      create(),
+      /em(\w+)is/,
+      function (_, /** @type {string} */ $1) {
+        return '[' + $1 + ']'
+      }
+    ),
     u('paragraph', [
       u('text', 'Some '),
       u('emphasis', [u('text', '[phas]')]),
@@ -165,13 +169,13 @@ test('findAndReplace', function (t) {
     findAndReplace(
       u('paragraph', [u('text', 'Some emphasis, importance, and code.')]),
       {
-        importance(value) {
+        importance(/** @type {string} */ value) {
           return u('strong', [u('text', value)])
         },
-        code(value) {
+        code(/** @type {string} */ value) {
           return u('inlineCode', value)
         },
-        emphasis(value) {
+        emphasis(/** @type {string} */ value) {
           return u('emphasis', [u('text', value)])
         }
       }
@@ -186,19 +190,19 @@ test('findAndReplace', function (t) {
       [
         [
           /importance/g,
-          function (value) {
+          function (/** @type {string} */ value) {
             return u('strong', [u('text', value)])
           }
         ],
         [
           /code/g,
-          function (value) {
+          function (/** @type {string} */ value) {
             return u('inlineCode', value)
           }
         ],
         [
           /emphasis/g,
-          function (value) {
+          function (/** @type {string} */ value) {
             return u('emphasis', [u('text', value)])
           }
         ]
@@ -223,30 +227,40 @@ test('findAndReplace', function (t) {
   )
 
   t.deepEqual(
-    findAndReplace(u('paragraph', [u('text', 'asd.')]), 'asd', (d) => d),
+    findAndReplace(
+      u('paragraph', [u('text', 'asd.')]),
+      'asd',
+      (/** @type {string} */ d) => d
+    ),
     u('paragraph', [u('text', 'asd'), u('text', '.')]),
     'should not recurse into a replaced value'
   )
 
   t.deepEqual(
-    findAndReplace(u('paragraph', [u('text', 'asd.')]), 'asd', (d) =>
-      u('emphasis', [u('text', d)])
+    findAndReplace(
+      u('paragraph', [u('text', 'asd.')]),
+      'asd',
+      (/** @type {string} */ d) => u('emphasis', [u('text', d)])
     ),
     u('paragraph', [u('emphasis', [u('text', 'asd')]), u('text', '.')]),
     'should not recurse into a replaced node (head)'
   )
 
   t.deepEqual(
-    findAndReplace(u('paragraph', [u('text', '.asd')]), 'asd', (d) =>
-      u('emphasis', [u('text', d)])
+    findAndReplace(
+      u('paragraph', [u('text', '.asd')]),
+      'asd',
+      (/** @type {string} */ d) => u('emphasis', [u('text', d)])
     ),
     u('paragraph', [u('text', '.'), u('emphasis', [u('text', 'asd')])]),
     'should not recurse into a replaced node (tail)'
   )
 
   t.deepEqual(
-    findAndReplace(u('paragraph', [u('text', 'asd')]), 'asd', (d) =>
-      u('emphasis', [u('text', d)])
+    findAndReplace(
+      u('paragraph', [u('text', 'asd')]),
+      'asd',
+      (/** @type {string} */ d) => u('emphasis', [u('text', d)])
     ),
     u('paragraph', [u('emphasis', [u('text', 'asd')])]),
     'should not recurse into a replaced node (head and tail)'
