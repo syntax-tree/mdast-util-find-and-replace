@@ -5,6 +5,7 @@ import {findAndReplace} from './index.js'
 test('findAndReplace', function (t) {
   t.throws(
     function () {
+      // @ts-expect-error runtime.
       findAndReplace(create(), true)
     },
     /^TypeError: Expected array or object as schema$/,
@@ -121,13 +122,13 @@ test('findAndReplace', function (t) {
   t.deepEqual(
     findAndReplace(create(), {
       emphasis() {
-        return u('link', [u('text', 'importance')])
+        return u('link', {url: 'x'}, [u('text', 'importance')])
       },
       importance: 'something else'
     }),
     u('paragraph', [
       u('text', 'Some '),
-      u('emphasis', [u('link', [u('text', 'something else')])]),
+      u('emphasis', [u('link', {url: 'x'}, [u('text', 'something else')])]),
       u('text', ', '),
       u('strong', [u('text', 'something else')]),
       u('text', ', and '),
