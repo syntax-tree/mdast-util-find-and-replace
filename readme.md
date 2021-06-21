@@ -28,7 +28,7 @@ import {u} from 'unist-builder'
 import {inspect} from 'unist-util-inspect'
 import {findAndReplace} from 'mdast-util-find-and-replace'
 
-var tree = u('paragraph', [
+const tree = u('paragraph', [
   u('text', 'Some '),
   u('emphasis', [u('text', 'emphasis')]),
   u('text', ' and '),

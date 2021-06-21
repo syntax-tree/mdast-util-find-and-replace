@@ -36,7 +36,7 @@ import escape from 'escape-string-regexp'
 import {visitParents} from 'unist-util-visit-parents'
 import {convert} from 'unist-util-is'
 
-var own = {}.hasOwnProperty
+const own = {}.hasOwnProperty
 
 /**
  * @param tree mdast tree
@@ -64,9 +64,9 @@ export const findAndReplace =
      */
     function (tree, find, replace, options) {
       /** @type {Options} */
-      var settings
+      let settings
       /** @type {FindAndReplaceSchema|FindAndReplaceList} */
-      var schema
+      let schema
 
       if (typeof find === 'string' || find instanceof RegExp) {
         // @ts-expect-error don’t expect options twice.
@@ -82,9 +82,9 @@ export const findAndReplace =
         settings = {}
       }
 
-      var ignored = convert(settings.ignore || [])
-      var pairs = toPairs(schema)
-      var pairIndex = -1
+      const ignored = convert(settings.ignore || [])
+      const pairs = toPairs(schema)
+      let pairIndex = -1
 
       while (++pairIndex < pairs.length) {
         visitParents(tree, 'text', visitor)
@@ -94,11 +94,11 @@ export const findAndReplace =
 
       /** @type {import('unist-util-visit-parents').Visitor<Text>} */
       function visitor(node, parents) {
-        var index = -1
+        let index = -1
         /** @type {Parent} */
-        var parent
+        let parent
         /** @type {Parent} */
-        var grandparent
+        let grandparent
 
         while (++index < parents.length) {
           // @ts-expect-error mdast vs. unist parent.
@@ -127,18 +127,18 @@ export const findAndReplace =
        * @returns {VisitorResult}
        */
       function handler(node, parent) {
-        var find = pairs[pairIndex][0]
-        var replace = pairs[pairIndex][1]
+        const find = pairs[pairIndex][0]
+        const replace = pairs[pairIndex][1]
         /** @type {Array.<PhrasingContent>} */
-        var nodes = []
-        var start = 0
-        var index = parent.children.indexOf(node)
+        let nodes = []
+        let start = 0
+        let index = parent.children.indexOf(node)
         /** @type {number} */
-        var position
+        let position
         /** @type {RegExpMatchArray} */
-        var match
+        let match
         /** @type {Array.<PhrasingContent>|PhrasingContent|string|false|undefined|null} */
-        var value
+        let value
 
         find.lastIndex = 0
 
@@ -196,11 +196,11 @@ export const findAndReplace =
  * @returns {Pairs}
  */
 function toPairs(schema) {
-  var index = -1
+  let index = -1
   /** @type {Pairs} */
-  var result = []
+  const result = []
   /** @type {string} */
-  var key
+  let key
 
   if (typeof schema !== 'object') {
     throw new TypeError('Expected array or object as schema')
