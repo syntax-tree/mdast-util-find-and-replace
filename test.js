@@ -44,7 +44,7 @@ test('findAndReplace', function (t) {
     findAndReplace(
       create(),
       /em(\w+)is/,
-      function (_, /** @type {string} */ $1) {
+      function (/** @type {string} */ _, /** @type {string} */ $1) {
         return '[' + $1 + ']'
       }
     ),

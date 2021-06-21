@@ -28,7 +28,7 @@
 
 /**
  * @callback ReplaceFunction
- * @param {...unknown} parameters
+ * @param {...any} parameters
  * @returns {Array.<PhrasingContent>|PhrasingContent|string|false|undefined|null}
  */
 
