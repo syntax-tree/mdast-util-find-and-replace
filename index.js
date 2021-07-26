@@ -63,7 +63,7 @@ export const findAndReplace =
      * @param {Options} [options]
      */
     function (tree, find, replace, options) {
-      /** @type {Options} */
+      /** @type {Options|undefined} */
       let settings
       /** @type {FindAndReplaceSchema|FindAndReplaceList} */
       let schema
@@ -97,7 +97,7 @@ export const findAndReplace =
         let index = -1
         /** @type {Parent} */
         let parent
-        /** @type {Parent} */
+        /** @type {Parent|undefined} */
         let grandparent
 
         while (++index < parents.length) {
@@ -118,7 +118,9 @@ export const findAndReplace =
           grandparent = parent
         }
 
-        return handler(node, grandparent)
+        if (grandparent) {
+          return handler(node, grandparent)
+        }
       }
 
       /**
@@ -129,28 +131,27 @@ export const findAndReplace =
       function handler(node, parent) {
         const find = pairs[pairIndex][0]
         const replace = pairs[pairIndex][1]
-        /** @type {Array.<PhrasingContent>} */
-        let nodes = []
         let start = 0
         let index = parent.children.indexOf(node)
-        /** @type {number} */
+        /** @type {Array.<PhrasingContent>} */
+        let nodes = []
+        /** @type {number|undefined} */
         let position
-        /** @type {RegExpMatchArray} */
-        let match
-        /** @type {Array.<PhrasingContent>|PhrasingContent|string|false|undefined|null} */
-        let value
 
         find.lastIndex = 0
 
-        match = find.exec(node.value)
+        let match = find.exec(node.value)
 
         while (match) {
           position = match.index
           // @ts-expect-error this is perfectly fine, typescript.
-          value = replace(...match, {index: match.index, input: match.input})
+          let value = replace(...match, {
+            index: match.index,
+            input: match.input
+          })
 
-          if (typeof value === 'string' && value.length > 0) {
-            value = {type: 'text', value}
+          if (typeof value === 'string') {
+            value = value.length > 0 ? {type: 'text', value} : undefined
           }
 
           if (value !== false) {
@@ -161,8 +162,10 @@ export const findAndReplace =
               })
             }
 
-            if (value) {
-              nodes = [].concat(nodes, value)
+            if (Array.isArray(value)) {
+              nodes.push(...value)
+            } else if (value) {
+              nodes.push(value)
             }
 
             start = position + match[0].length
@@ -196,17 +199,16 @@ export const findAndReplace =
  * @returns {Pairs}
  */
 function toPairs(schema) {
-  let index = -1
   /** @type {Pairs} */
   const result = []
-  /** @type {string} */
-  let key
 
   if (typeof schema !== 'object') {
     throw new TypeError('Expected array or object as schema')
   }
 
   if (Array.isArray(schema)) {
+    let index = -1
+
     while (++index < schema.length) {
       result.push([
         toExpression(schema[index][0]),
@@ -214,6 +216,9 @@ function toPairs(schema) {
       ])
     }
   } else {
+    /** @type {string} */
+    let key
+
     for (key in schema) {
       if (own.call(schema, key)) {
         result.push([toExpression(key), toFunction(schema[key])])
@@ -237,11 +242,5 @@ function toExpression(find) {
  * @returns {ReplaceFunction}
  */
 function toFunction(replace) {
-  return typeof replace === 'function' ? replace : returner
-
-  /** @type {ReplaceFunction} */
-  function returner() {
-    // @ts-expect-error it’s a string.
-    return replace
-  }
+  return typeof replace === 'function' ? replace : () => replace
 }
