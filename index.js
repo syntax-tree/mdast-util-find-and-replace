@@ -2,11 +2,12 @@
  * @typedef Options Configuration.
  * @property {Test} [ignore] `unist-util-is` test used to assert parents
  *
- * @typedef {import('mdast').Text} Text
- * @typedef {import('mdast').Parent} Parent
  * @typedef {import('mdast').Root} Root
+ * @typedef {import('mdast').Content} Content
  * @typedef {import('mdast').PhrasingContent} PhrasingContent
- * @typedef {Parent['children'][number]|Root} Node
+ * @typedef {import('mdast').Text} Text
+ * @typedef {Content|Root} Node
+ * @typedef {Extract<Node, import('mdast').Parent>} Parent
  *
  * @typedef {import('unist-util-visit-parents').Test} Test
  * @typedef {import('unist-util-visit-parents').VisitorResult} VisitorResult
@@ -95,14 +96,11 @@ export const findAndReplace =
       /** @type {import('unist-util-visit-parents').Visitor<Text>} */
       function visitor(node, parents) {
         let index = -1
-        /** @type {Parent} */
-        let parent
         /** @type {Parent|undefined} */
         let grandparent
 
         while (++index < parents.length) {
-          // @ts-expect-error mdast vs. unist parent.
-          parent = parents[index]
+          const parent = /** @type {Parent} */ (parents[index])
 
           if (
             ignored(
@@ -132,6 +130,7 @@ export const findAndReplace =
         const find = pairs[pairIndex][0]
         const replace = pairs[pairIndex][1]
         let start = 0
+        // @ts-expect-error: TS is wrong, some of these children can be text.
         let index = parent.children.indexOf(node)
         /** @type {Array.<PhrasingContent>} */
         let nodes = []

@@ -61,6 +61,20 @@ test('findAndReplace', (t) => {
   )
 
   t.deepEqual(
+    findAndReplace(create(), 'emphasis', () => ''),
+    u('paragraph', [
+      u('text', 'Some '),
+      u('emphasis', []),
+      u('text', ', '),
+      u('strong', [u('text', 'importance')]),
+      u('text', ', and '),
+      u('inlineCode', 'code'),
+      u('text', '.')
+    ]),
+    'should work when given `replace` returns an empty string'
+  )
+
+  t.deepEqual(
     findAndReplace(create(), 'emphasis', () => {
       return u('delete', [u('break')])
     }),
@@ -74,6 +88,20 @@ test('findAndReplace', (t) => {
       u('text', '.')
     ]),
     'should work when given `replace` returns a node'
+  )
+
+  t.deepEqual(
+    findAndReplace(create(), 'emphasis', () => [u('delete', []), u('break')]),
+    u('paragraph', [
+      u('text', 'Some '),
+      u('emphasis', [u('delete', []), u('break')]),
+      u('text', ', '),
+      u('strong', [u('text', 'importance')]),
+      u('text', ', and '),
+      u('inlineCode', 'code'),
+      u('text', '.')
+    ]),
+    'should work when given `replace` returns a list of nodes'
   )
 
   t.deepEqual(
