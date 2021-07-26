@@ -44,9 +44,7 @@ test('findAndReplace', (t) => {
     findAndReplace(
       create(),
       /em(\w+)is/,
-      (/** @type {string} */ _, /** @type {string} */ $1) => {
-        return '[' + $1 + ']'
-      }
+      (/** @type {string} */ _, /** @type {string} */ $1) => '[' + $1 + ']'
     ),
     u('paragraph', [
       u('text', 'Some '),
@@ -75,9 +73,7 @@ test('findAndReplace', (t) => {
   )
 
   t.deepEqual(
-    findAndReplace(create(), 'emphasis', () => {
-      return u('delete', [u('break')])
-    }),
+    findAndReplace(create(), 'emphasis', () => u('delete', [u('break')])),
     u('paragraph', [
       u('text', 'Some '),
       u('emphasis', [u('delete', [u('break')])]),
