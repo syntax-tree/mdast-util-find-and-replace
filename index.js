@@ -143,7 +143,6 @@ export const findAndReplace =
 
         while (match) {
           position = match.index
-          // @ts-expect-error this is perfectly fine, typescript.
           let value = replace(...match, {
             index: match.index,
             input: match.input
