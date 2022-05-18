@@ -93,7 +93,7 @@ export const findAndReplace =
 
       return tree
 
-      /** @type {import('unist-util-visit-parents').Visitor<Text>} */
+      /** @type {import('unist-util-visit-parents/complex-types').BuildVisitor<Root, 'text'>} */
       function visitor(node, parents) {
         let index = -1
         /** @type {Parent|undefined} */
