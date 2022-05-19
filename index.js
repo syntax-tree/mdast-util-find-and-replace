@@ -1,6 +1,8 @@
 /**
- * @typedef Options Configuration.
- * @property {Test} [ignore] `unist-util-is` test used to assert parents
+ * @typedef Options
+ *   Configuration (optional).
+ * @property {Test} [ignore]
+ *   `unist-util-is` test used to assert parents
  *
  * @typedef {import('mdast').Root} Root
  * @typedef {import('mdast').Content} Content
@@ -20,17 +22,17 @@
  * @typedef {string|ReplaceFunction} Replace
  *
  * @typedef {[Find, Replace]} FindAndReplaceTuple
- * @typedef {Object.<string, Replace>} FindAndReplaceSchema
- * @typedef {Array.<FindAndReplaceTuple>} FindAndReplaceList
+ * @typedef {Record<string, Replace>} FindAndReplaceSchema
+ * @typedef {Array<FindAndReplaceTuple>} FindAndReplaceList
  *
  * @typedef {[RegExp, ReplaceFunction]} Pair
- * @typedef {Array.<Pair>} Pairs
+ * @typedef {Array<Pair>} Pairs
  */
 
 /**
  * @callback ReplaceFunction
  * @param {...any} parameters
- * @returns {Array.<PhrasingContent>|PhrasingContent|string|false|undefined|null}
+ * @returns {Array<PhrasingContent>|PhrasingContent|string|false|undefined|null}
  */
 
 import escape from 'escape-string-regexp'
@@ -132,7 +134,7 @@ export const findAndReplace =
         let start = 0
         // @ts-expect-error: TS is wrong, some of these children can be text.
         let index = parent.children.indexOf(node)
-        /** @type {Array.<PhrasingContent>} */
+        /** @type {Array<PhrasingContent>} */
         let nodes = []
         /** @type {number|undefined} */
         let position
