@@ -51,14 +51,14 @@ npm install mdast-util-find-and-replace
 In Deno with [`esm.sh`][esmsh]:
 
 ```js
-import {findAndReplace} from 'https://esm.sh/mdast-util-find-and-replace@4'
+import {findAndReplace} from 'https://esm.sh/mdast-util-find-and-replace@2'
 ```
 
 In browsers with [`esm.sh`][esmsh]:
 
 ```html
 <script type="module">
-  import {findAndReplace} from 'https://esm.sh/mdast-util-find-and-replace@4?bundle'
+  import {findAndReplace} from 'https://esm.sh/mdast-util-find-and-replace@2?bundle'
 </script>
 ```
 
@@ -145,7 +145,7 @@ Partial matches are not supported.
     (at `1`), or an `Object` where each key is `find` and each value is
     the corresponding `replace`
 *   `options.ignore` (`Test`, default: `[]`)
-    — Any [`unist-util-is`][test] compatible test.
+    — any [`unist-util-is`][test] compatible test.
 
 ###### Returns
 
