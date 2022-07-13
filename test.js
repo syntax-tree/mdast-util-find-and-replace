@@ -237,6 +237,25 @@ test('findAndReplace', (t) => {
   )
 
   t.deepEqual(
+    findAndReplace(u('paragraph', [u('text', 'aaa bbb')]), [
+      [
+        /\b\w+\b/g,
+        function (/** @type {string} */ value) {
+          return value === 'aaa' ? u('strong', [u('text', value)]) : false
+        }
+      ]
+    ]),
+    {
+      type: 'paragraph',
+      children: [
+        {type: 'strong', children: [{type: 'text', value: 'aaa'}]},
+        {type: 'text', value: ' bbb'}
+      ]
+    },
+    'should support a match, and then a `false`'
+  )
+
+  t.deepEqual(
     findAndReplace(create(), 'emphasis', () => false),
     u('paragraph', [
       u('text', 'Some '),
