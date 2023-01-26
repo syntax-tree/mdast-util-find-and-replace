@@ -1,9 +1,10 @@
-import test from 'tape'
+import assert from 'node:assert/strict'
+import test from 'node:test'
 import {u} from 'unist-builder'
 import {findAndReplace} from './index.js'
 
-test('findAndReplace', (t) => {
-  t.throws(
+test('findAndReplace', () => {
+  assert.throws(
     () => {
       // @ts-expect-error runtime.
       findAndReplace(create(), true)
@@ -12,7 +13,7 @@ test('findAndReplace', (t) => {
     'should throw on invalid search and replaces'
   )
 
-  t.deepEqual(
+  assert.deepEqual(
     findAndReplace(create(), 'emphasis'),
     u('paragraph', [
       u('text', 'Some '),
@@ -26,7 +27,7 @@ test('findAndReplace', (t) => {
     'should remove without `replace`'
   )
 
-  t.deepEqual(
+  assert.deepEqual(
     findAndReplace(create(), 'emphasis', '!!!'),
     u('paragraph', [
       u('text', 'Some '),
@@ -40,7 +41,7 @@ test('findAndReplace', (t) => {
     'should work when given `find` and `replace`'
   )
 
-  t.deepEqual(
+  assert.deepEqual(
     findAndReplace(
       create(),
       /em(\w+)is/,
@@ -58,7 +59,7 @@ test('findAndReplace', (t) => {
     'should work when given `find` as a `RegExp` and `replace` as a `Function`'
   )
 
-  t.deepEqual(
+  assert.deepEqual(
     findAndReplace(create(), 'emphasis', () => ''),
     u('paragraph', [
       u('text', 'Some '),
@@ -72,7 +73,7 @@ test('findAndReplace', (t) => {
     'should work when given `replace` returns an empty string'
   )
 
-  t.deepEqual(
+  assert.deepEqual(
     findAndReplace(create(), 'emphasis', () => u('delete', [u('break')])),
     u('paragraph', [
       u('text', 'Some '),
@@ -86,7 +87,7 @@ test('findAndReplace', (t) => {
     'should work when given `replace` returns a node'
   )
 
-  t.deepEqual(
+  assert.deepEqual(
     findAndReplace(create(), 'emphasis', () => [u('delete', []), u('break')]),
     u('paragraph', [
       u('text', 'Some '),
@@ -100,7 +101,7 @@ test('findAndReplace', (t) => {
     'should work when given `replace` returns a list of nodes'
   )
 
-  t.deepEqual(
+  assert.deepEqual(
     findAndReplace(create(), [
       ['emphasis', '!!!'],
       ['importance', '???']
@@ -117,7 +118,7 @@ test('findAndReplace', (t) => {
     'should work when given `search` as an matrix of strings'
   )
 
-  t.deepEqual(
+  assert.deepEqual(
     findAndReplace(create(), {emp: 'hacks', ',': '!'}),
     u('paragraph', [
       u('text', 'Some '),
@@ -133,7 +134,7 @@ test('findAndReplace', (t) => {
     'should work when given `search` as an object of strings'
   )
 
-  t.deepEqual(
+  assert.deepEqual(
     findAndReplace(create(), /\Bmp\B/, '[MP]'),
     u('paragraph', [
       u('text', 'Some '),
@@ -147,7 +148,7 @@ test('findAndReplace', (t) => {
     'should work on partial matches'
   )
 
-  t.deepEqual(
+  assert.deepEqual(
     findAndReplace(create(), {
       emphasis() {
         return u('link', {url: 'x'}, [u('text', 'importance')])
@@ -166,7 +167,7 @@ test('findAndReplace', (t) => {
     'should find-and-replace recursively'
   )
 
-  t.deepEqual(
+  assert.deepEqual(
     findAndReplace(
       u('paragraph', [
         u('text', 'Some '),
@@ -189,7 +190,7 @@ test('findAndReplace', (t) => {
     'should ignore from options'
   )
 
-  t.deepEqual(
+  assert.deepEqual(
     findAndReplace(
       u('paragraph', [u('text', 'Some emphasis, importance, and code.')]),
       {
@@ -208,7 +209,7 @@ test('findAndReplace', (t) => {
     'should not be order-sensitive with strings'
   )
 
-  t.deepEqual(
+  assert.deepEqual(
     findAndReplace(
       u('paragraph', [u('text', 'Some emphasis, importance, and code.')]),
       [
@@ -236,7 +237,7 @@ test('findAndReplace', (t) => {
     'should not be order-sensitive with regexes'
   )
 
-  t.deepEqual(
+  assert.deepEqual(
     findAndReplace(u('paragraph', [u('text', 'aaa bbb')]), [
       [
         /\b\w+\b/g,
@@ -255,7 +256,7 @@ test('findAndReplace', (t) => {
     'should support a match, and then a `false`'
   )
 
-  t.deepEqual(
+  assert.deepEqual(
     findAndReplace(create(), 'emphasis', () => false),
     u('paragraph', [
       u('text', 'Some '),
@@ -269,7 +270,7 @@ test('findAndReplace', (t) => {
     'should not replace when returning false'
   )
 
-  t.deepEqual(
+  assert.deepEqual(
     findAndReplace(
       u('paragraph', [u('text', 'asd.')]),
       'asd',
@@ -279,7 +280,7 @@ test('findAndReplace', (t) => {
     'should not recurse into a replaced value'
   )
 
-  t.deepEqual(
+  assert.deepEqual(
     findAndReplace(
       u('paragraph', [u('text', 'asd.')]),
       'asd',
@@ -289,7 +290,7 @@ test('findAndReplace', (t) => {
     'should not recurse into a replaced node (head)'
   )
 
-  t.deepEqual(
+  assert.deepEqual(
     findAndReplace(
       u('paragraph', [u('text', '.asd')]),
       'asd',
@@ -299,7 +300,7 @@ test('findAndReplace', (t) => {
     'should not recurse into a replaced node (tail)'
   )
 
-  t.deepEqual(
+  assert.deepEqual(
     findAndReplace(
       u('paragraph', [u('text', 'asd')]),
       'asd',
@@ -309,7 +310,7 @@ test('findAndReplace', (t) => {
     'should not recurse into a replaced node (head and tail)'
   )
 
-  t.deepEqual(
+  assert.deepEqual(
     findAndReplace(create(), 'and', 'alert(1)'),
     u('paragraph', [
       u('text', 'Some '),
@@ -324,8 +325,6 @@ test('findAndReplace', (t) => {
     ]),
     'security: replacer as string (safe)'
   )
-
-  t.end()
 })
 
 function create() {
