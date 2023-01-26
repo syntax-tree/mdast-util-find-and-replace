@@ -33,6 +33,7 @@
     "index.js"
   ],
   "dependencies": {
+    "@types/mdast": "^3.0.0",
     "escape-string-regexp": "^5.0.0",
     "unist-util-is": "^5.0.0",
     "unist-util-visit-parents": "^5.0.0"
