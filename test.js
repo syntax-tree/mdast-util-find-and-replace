@@ -1,13 +1,14 @@
 import assert from 'node:assert/strict'
 import test from 'node:test'
+import {findAndReplace} from 'mdast-util-find-and-replace'
 import {u} from 'unist-builder'
-import {findAndReplace} from './index.js'
 
 test('findAndReplace', async function (t) {
   await t.test('should expose the public api', async function () {
-    assert.deepEqual(Object.keys(await import('./index.js')).sort(), [
-      'findAndReplace'
-    ])
+    assert.deepEqual(
+      Object.keys(await import('mdast-util-find-and-replace')).sort(),
+      ['findAndReplace']
+    )
   })
 
   await t.test(
