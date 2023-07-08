@@ -152,7 +152,7 @@ Partial matches are not supported.
 
 ###### Returns
 
-Given, modified, tree ([`Node`][node]).
+Nothing (`undefined`).
 
 ### `Find`
 
@@ -163,7 +163,7 @@ Strings are escaped and then turned into global expressions.
 ###### Type
 
 ```ts
-type Find = string | RegExp
+type Find = RegExp | string
 ```
 
 ### `FindAndReplaceList`
@@ -231,7 +231,7 @@ Thing to replace with (TypeScript type).
 ###### Type
 
 ```ts
-type Replace = string | ReplaceFunction
+type Replace = ReplaceFunction | string
 ```
 
 See [`ReplaceFunction`][api-replacefunction].
