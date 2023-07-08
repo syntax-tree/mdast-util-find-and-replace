@@ -49,7 +49,7 @@ does the same but on [hast][].
 ## Install
 
 This package is [ESM only][esm].
-In Node.js (version 14.14+ and or 16.0+), install with [npm][]:
+In Node.js (version 16+), install with [npm][]:
 
 ```sh
 npm install mdast-util-find-and-replace
@@ -72,9 +72,9 @@ In browsers with [`esm.sh`][esmsh]:
 ## Use
 
 ```js
+import {findAndReplace} from 'mdast-util-find-and-replace'
 import {u} from 'unist-builder'
 import {inspect} from 'unist-util-inspect'
-import {findAndReplace} from 'mdast-util-find-and-replace'
 
 const tree = u('paragraph', [
   u('text', 'Some '),
@@ -119,7 +119,7 @@ paragraph[8]
 
 ## API
 
-This package exports the identifier [`findAndReplace`][api-findandreplace].
+This package exports the identifier [`findAndReplace`][api-find-and-replace].
 There is no default export.
 
 ### `findAndReplace(tree, list[, options])`
@@ -134,8 +134,8 @@ Partial matches are not supported.
 
 *   `tree` ([`Node`][node])
     — tree to change
-*   `list` ([`FindAndReplaceList`][api-findandreplacelist] or
-    [`FindAndReplaceTuple`][api-findandreplacetuple])
+*   `list` ([`FindAndReplaceList`][api-find-and-replace-list] or
+    [`FindAndReplaceTuple`][api-find-and-replace-tuple])
     — one or more find-and-replace pairs
 *   `options` ([`Options`][api-options])
     — configuration
@@ -166,7 +166,7 @@ Several find and replaces, in array form (TypeScript type).
 type FindAndReplaceList = Array<FindAndReplaceTuple>
 ```
 
-See [`FindAndReplaceTuple`][api-findandreplacetuple].
+See [`FindAndReplaceTuple`][api-find-and-replace-tuple].
 
 ### `FindAndReplaceTuple`
 
@@ -212,7 +212,7 @@ Thing to replace with (TypeScript type).
 type Replace = ReplaceFunction | string
 ```
 
-See [`ReplaceFunction`][api-replacefunction].
+See [`ReplaceFunction`][api-replace-function].
 
 ### `ReplaceFunction`
 
@@ -226,7 +226,7 @@ The parameters are the result of corresponding search expression:
     — whole match
 *   `...capture` (`Array<string>`)
     — matches from regex capture groups
-*   `match` ([`RegExpMatchObject`][api-regexpmatchobject])
+*   `match` ([`RegExpMatchObject`][api-regexp-match-object])
     — info on the match
 
 ###### Returns
@@ -242,19 +242,22 @@ Thing to replace with:
 
 This package is fully typed with [TypeScript][].
 It exports the additional types [`Find`][api-find],
-[`FindAndReplaceList`][api-findandreplacelist],
-[`FindAndReplaceTuple`][api-findandreplacetuple],
+[`FindAndReplaceList`][api-find-and-replace-list],
+[`FindAndReplaceTuple`][api-find-and-replace-tuple],
 [`Options`][api-options],
-[`RegExpMatchObject`][api-regexpmatchobject],
+[`RegExpMatchObject`][api-regexp-match-object],
 [`Replace`][api-replace], and
-[`ReplaceFunction`][api-replacefunction].
+[`ReplaceFunction`][api-replace-function].
 
 ## Compatibility
 
-Projects maintained by the unified collective are compatible with all maintained
+Projects maintained by the unified collective are compatible with maintained
 versions of Node.js.
-As of now, that is Node.js 14.14+ and 16.0+.
-Our projects sometimes work with older versions, but this is not guaranteed.
+
+When we cut a new major release, we drop support for unmaintained versions of
+Node.
+This means we try to keep the current release line,
+`mdast-util-find-and-replace@^2`, compatible with Node.js 12.
 
 ## Security
 
@@ -298,9 +301,9 @@ abide by its terms.
 
 [downloads]: https://www.npmjs.com/package/mdast-util-find-and-replace
 
-[size-badge]: https://img.shields.io/bundlephobia/minzip/mdast-util-find-and-replace.svg
+[size-badge]: https://img.shields.io/badge/dynamic/json?label=minzipped%20size&query=$.size.compressedSize&url=https://deno.bundlejs.com/?q=mdast-util-find-and-replace
 
-[size]: https://bundlephobia.com/result?p=mdast-util-find-and-replace
+[size]: https://bundlejs.com/?q=mdast-util-find-and-replace
 
 [sponsors-badge]: https://opencollective.com/unified/sponsors/badge.svg
 
@@ -348,7 +351,7 @@ abide by its terms.
 
 [hast-util-find-and-replace]: https://github.com/syntax-tree/hast-util-find-and-replace
 
-[api-findandreplace]: #findandreplacetree-list-options
+[api-find-and-replace]: #findandreplacetree-list-options
 
 [api-options]: #options
 
@@ -356,10 +359,10 @@ abide by its terms.
 
 [api-replace]: #replace
 
-[api-replacefunction]: #replacefunction
+[api-replace-function]: #replacefunction
 
-[api-findandreplacelist]: #findandreplacelist
+[api-find-and-replace-list]: #findandreplacelist
 
-[api-findandreplacetuple]: #findandreplacetuple
+[api-find-and-replace-tuple]: #findandreplacetuple
 
-[api-regexpmatchobject]: #regexpmatchobject
+[api-regexp-match-object]: #regexpmatchobject
