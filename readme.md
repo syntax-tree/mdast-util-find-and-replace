@@ -58,14 +58,14 @@ npm install mdast-util-find-and-replace
 In Deno with [`esm.sh`][esmsh]:
 
 ```js
-import {findAndReplace} from 'https://esm.sh/mdast-util-find-and-replace@2'
+import {findAndReplace} from 'https://esm.sh/mdast-util-find-and-replace@3'
 ```
 
 In browsers with [`esm.sh`][esmsh]:
 
 ```html
 <script type="module">
-  import {findAndReplace} from 'https://esm.sh/mdast-util-find-and-replace@2?bundle'
+  import {findAndReplace} from 'https://esm.sh/mdast-util-find-and-replace@3?bundle'
 </script>
 ```
 
