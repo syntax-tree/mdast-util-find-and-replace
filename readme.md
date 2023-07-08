@@ -17,10 +17,9 @@
 *   [Install](#install)
 *   [Use](#use)
 *   [API](#api)
-    *   [`findAndReplace(tree, find, replace[, options])`](#findandreplacetree-find-replace-options)
+    *   [`findAndReplace(tree, list[, options])`](#findandreplacetree-list-options)
     *   [`Find`](#find)
     *   [`FindAndReplaceList`](#findandreplacelist)
-    *   [`FindAndReplaceSchema`](#findandreplaceschema)
     *   [`FindAndReplaceTuple`](#findandreplacetuple)
     *   [`Options`](#options)
     *   [`RegExpMatchObject`](#regexpmatchobject)
@@ -123,7 +122,7 @@ paragraph[8]
 This package exports the identifier [`findAndReplace`][api-findandreplace].
 There is no default export.
 
-### `findAndReplace(tree, find, replace[, options])`
+### `findAndReplace(tree, list[, options])`
 
 Find patterns in a tree and replace them.
 
@@ -131,22 +130,13 @@ The algorithm searches the tree in *[preorder][]* for complete values in
 [`Text`][text] nodes.
 Partial matches are not supported.
 
-###### Signatures
-
-*   `findAndReplace(tree, find, replace[, options])`
-*   `findAndReplace(tree, search[, options])`
-
 ###### Parameters
 
 *   `tree` ([`Node`][node])
     — tree to change
-*   `find` ([`Find`][api-find])
-    — value to find and remove
-*   `replace` ([`Replace`][api-replace])
-    — thing to replace with
-*   `search` ([`FindAndReplaceSchema`][api-findandreplaceschema] or
-    [`FindAndReplaceList`][api-findandreplacelist])
-    — several find and replaces
+*   `list` ([`FindAndReplaceList`][api-findandreplacelist] or
+    [`FindAndReplaceTuple`][api-findandreplacetuple])
+    — one or more find-and-replace pairs
 *   `options` ([`Options`][api-options])
     — configuration
 
@@ -178,18 +168,6 @@ type FindAndReplaceList = Array<FindAndReplaceTuple>
 
 See [`FindAndReplaceTuple`][api-findandreplacetuple].
 
-### `FindAndReplaceSchema`
-
-Several find and replaces, in object form (TypeScript type).
-
-###### Type
-
-```ts
-type FindAndReplaceSchema = Record<string, Replace>
-```
-
-See [`Replace`][api-replace].
-
 ### `FindAndReplaceTuple`
 
 Find and replace in tuple form (TypeScript type).
@@ -197,7 +175,7 @@ Find and replace in tuple form (TypeScript type).
 ###### Type
 
 ```ts
-type FindAndReplaceTuple = [Find, Replace]
+type FindAndReplaceTuple = [Find, Replace?]
 ```
 
 See [`Find`][api-find] and [`Replace`][api-replace].
@@ -265,7 +243,6 @@ Thing to replace with:
 This package is fully typed with [TypeScript][].
 It exports the additional types [`Find`][api-find],
 [`FindAndReplaceList`][api-findandreplacelist],
-[`FindAndReplaceSchema`][api-findandreplaceschema],
 [`FindAndReplaceTuple`][api-findandreplacetuple],
 [`Options`][api-options],
 [`RegExpMatchObject`][api-regexpmatchobject],
@@ -371,7 +348,7 @@ abide by its terms.
 
 [hast-util-find-and-replace]: https://github.com/syntax-tree/hast-util-find-and-replace
 
-[api-findandreplace]: #findandreplacetree-find-replace-options
+[api-findandreplace]: #findandreplacetree-list-options
 
 [api-options]: #options
 
@@ -382,8 +359,6 @@ abide by its terms.
 [api-replacefunction]: #replacefunction
 
 [api-findandreplacelist]: #findandreplacelist
-
-[api-findandreplaceschema]: #findandreplaceschema
 
 [api-findandreplacetuple]: #findandreplacetuple
 

@@ -16,13 +16,15 @@ test('findAndReplace', async function (t) {
       assert.throws(function () {
         // @ts-expect-error: check that the runtime throws an error.
         findAndReplace(create(), true)
-      }, /^TypeError: Expected array or object as schema$/)
+      }, /Expected find and replace tuple or list of tuples/)
     }
   )
 
   await t.test('should remove without `replace`', async function () {
     const tree = create()
-    findAndReplace(tree, 'emphasis')
+
+    findAndReplace(tree, ['emphasis'])
+
     assert.deepEqual(
       tree,
       u('paragraph', [
@@ -38,10 +40,10 @@ test('findAndReplace', async function (t) {
   })
 
   await t.test(
-    'should work when given `find` and `replace`',
+    'should work when given a find-and-replace tuple',
     async function () {
       const tree = create()
-      findAndReplace(tree, 'emphasis', '!!!')
+      findAndReplace(tree, ['emphasis', '!!!'])
       assert.deepEqual(
         tree,
         u('paragraph', [
@@ -62,13 +64,12 @@ test('findAndReplace', async function (t) {
     async function () {
       const tree = create()
 
-      findAndReplace(
-        tree,
+      findAndReplace(tree, [
         /em(\w+)is/,
         function (/** @type {string} */ _, /** @type {string} */ $1) {
           return '[' + $1 + ']'
         }
-      )
+      ])
 
       assert.deepEqual(
         tree,
@@ -90,9 +91,12 @@ test('findAndReplace', async function (t) {
     async function () {
       const tree = create()
 
-      findAndReplace(tree, 'emphasis', function () {
-        return ''
-      })
+      findAndReplace(tree, [
+        'emphasis',
+        function () {
+          return ''
+        }
+      ])
 
       assert.deepEqual(
         tree,
@@ -114,9 +118,12 @@ test('findAndReplace', async function (t) {
     async function () {
       const tree = create()
 
-      findAndReplace(tree, 'emphasis', function () {
-        return u('delete', [u('break')])
-      })
+      findAndReplace(tree, [
+        'emphasis',
+        function () {
+          return u('delete', [u('break')])
+        }
+      ])
 
       assert.deepEqual(
         tree,
@@ -138,9 +145,12 @@ test('findAndReplace', async function (t) {
     async function () {
       const tree = create()
 
-      findAndReplace(tree, 'emphasis', function () {
-        return [u('delete', []), u('break')]
-      })
+      findAndReplace(tree, [
+        'emphasis',
+        function () {
+          return [u('delete', []), u('break')]
+        }
+      ])
 
       assert.deepEqual(
         tree,
@@ -157,59 +167,43 @@ test('findAndReplace', async function (t) {
     }
   )
 
-  await t.test(
-    'should work when given `search` as an matrix of strings',
-    async function () {
-      const tree = create()
+  await t.test('should work when given a list of tuples', async function () {
+    const tree = create()
 
-      findAndReplace(tree, [
-        ['emphasis', '!!!'],
-        ['importance', '???']
+    findAndReplace(tree, [
+      ['emphasis', '!!!'],
+      ['importance', '???']
+    ])
+
+    assert.deepEqual(
+      tree,
+      u('paragraph', [
+        u('text', 'Some '),
+        u('emphasis', [u('text', '!!!')]),
+        u('text', ', '),
+        u('strong', [u('text', '???')]),
+        u('text', ', and '),
+        u('inlineCode', 'code'),
+        u('text', '.')
       ])
-
-      assert.deepEqual(
-        tree,
-        u('paragraph', [
-          u('text', 'Some '),
-          u('emphasis', [u('text', '!!!')]),
-          u('text', ', '),
-          u('strong', [u('text', '???')]),
-          u('text', ', and '),
-          u('inlineCode', 'code'),
-          u('text', '.')
-        ])
-      )
-    }
-  )
+    )
+  })
 
   await t.test(
-    'should work when given `search` as an object of strings',
+    'should work when given an empty list of tuples',
     async function () {
       const tree = create()
 
-      findAndReplace(tree, {emp: 'hacks', ',': '!'})
+      findAndReplace(tree, [])
 
-      assert.deepEqual(
-        tree,
-        u('paragraph', [
-          u('text', 'Some '),
-          u('emphasis', [u('text', 'hacks'), u('text', 'hasis')]),
-          u('text', '!'),
-          u('text', ' '),
-          u('strong', [u('text', 'importance')]),
-          u('text', '!'),
-          u('text', ' and '),
-          u('inlineCode', 'code'),
-          u('text', '.')
-        ])
-      )
+      assert.deepEqual(tree, create())
     }
   )
 
   await t.test('should work on partial matches', async function () {
     const tree = create()
 
-    findAndReplace(tree, /\Bmp\B/, '[MP]')
+    findAndReplace(tree, [/\Bmp\B/, '[MP]'])
 
     assert.deepEqual(
       tree,
@@ -228,12 +222,15 @@ test('findAndReplace', async function (t) {
   await t.test('should find-and-replace recursively', async function () {
     const tree = create()
 
-    findAndReplace(tree, {
-      emphasis() {
-        return u('link', {url: 'x'}, [u('text', 'importance')])
-      },
-      importance: 'something else'
-    })
+    findAndReplace(tree, [
+      [
+        'emphasis',
+        function () {
+          return u('link', {url: 'x'}, [u('text', 'importance')])
+        }
+      ],
+      ['importance', 'something else']
+    ])
 
     assert.deepEqual(
       tree,
@@ -259,7 +256,7 @@ test('findAndReplace', async function (t) {
       u('text', '.')
     ])
 
-    findAndReplace(tree, 'importance', '!!!', {ignore: 'strong'})
+    findAndReplace(tree, ['importance', '!!!'], {ignore: 'strong'})
 
     assert.deepEqual(
       tree,
@@ -278,17 +275,26 @@ test('findAndReplace', async function (t) {
       u('text', 'Some emphasis, importance, and code.')
     ])
 
-    findAndReplace(tree, {
-      importance(/** @type {string} */ value) {
-        return u('strong', [u('text', value)])
-      },
-      code(/** @type {string} */ value) {
-        return u('inlineCode', value)
-      },
-      emphasis(/** @type {string} */ value) {
-        return u('emphasis', [u('text', value)])
-      }
-    })
+    findAndReplace(tree, [
+      [
+        'importance',
+        function (/** @type {string} */ value) {
+          return u('strong', [u('text', value)])
+        }
+      ],
+      [
+        'code',
+        function (/** @type {string} */ value) {
+          return u('inlineCode', value)
+        }
+      ],
+      [
+        'emphasis',
+        function (/** @type {string} */ value) {
+          return u('emphasis', [u('text', value)])
+        }
+      ]
+    ])
 
     assert.deepEqual(tree, create())
   })
@@ -346,9 +352,12 @@ test('findAndReplace', async function (t) {
   await t.test('should not replace when returning false', async function () {
     const tree = create()
 
-    findAndReplace(tree, 'emphasis', function () {
-      return false
-    })
+    findAndReplace(tree, [
+      'emphasis',
+      function () {
+        return false
+      }
+    ])
 
     assert.deepEqual(
       tree,
@@ -367,9 +376,12 @@ test('findAndReplace', async function (t) {
   await t.test('should not recurse into a replaced value', async function () {
     const tree = u('paragraph', [u('text', 'asd.')])
 
-    findAndReplace(tree, 'asd', function (/** @type {string} */ d) {
-      return d
-    })
+    findAndReplace(tree, [
+      'asd',
+      function (/** @type {string} */ d) {
+        return d
+      }
+    ])
 
     assert.deepEqual(tree, u('paragraph', [u('text', 'asd'), u('text', '.')]))
   })
@@ -379,9 +391,12 @@ test('findAndReplace', async function (t) {
     async function () {
       const tree = u('paragraph', [u('text', 'asd.')])
 
-      findAndReplace(tree, 'asd', function (/** @type {string} */ d) {
-        return u('emphasis', [u('text', d)])
-      })
+      findAndReplace(tree, [
+        'asd',
+        function (/** @type {string} */ d) {
+          return u('emphasis', [u('text', d)])
+        }
+      ])
 
       assert.deepEqual(
         tree,
@@ -395,9 +410,12 @@ test('findAndReplace', async function (t) {
     async function () {
       const tree = u('paragraph', [u('text', '.asd')])
 
-      findAndReplace(tree, 'asd', function (/** @type {string} */ d) {
-        return u('emphasis', [u('text', d)])
-      })
+      findAndReplace(tree, [
+        'asd',
+        function (/** @type {string} */ d) {
+          return u('emphasis', [u('text', d)])
+        }
+      ])
 
       assert.deepEqual(
         tree,
@@ -411,9 +429,12 @@ test('findAndReplace', async function (t) {
     async function () {
       const tree = u('paragraph', [u('text', 'asd')])
 
-      findAndReplace(tree, 'asd', function (/** @type {string} */ d) {
-        return u('emphasis', [u('text', d)])
-      })
+      findAndReplace(tree, [
+        'asd',
+        function (/** @type {string} */ d) {
+          return u('emphasis', [u('text', d)])
+        }
+      ])
 
       assert.deepEqual(
         tree,
@@ -425,7 +446,7 @@ test('findAndReplace', async function (t) {
   await t.test('security: replacer as string (safe)', async function () {
     const tree = create()
 
-    findAndReplace(tree, 'and', 'alert(1)')
+    findAndReplace(tree, ['and', 'alert(1)'])
 
     assert.deepEqual(
       tree,
