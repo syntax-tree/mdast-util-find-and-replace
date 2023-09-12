@@ -464,6 +464,28 @@ test('findAndReplace', async function (t) {
       ])
     )
   })
+
+  await t.test(
+    'should replace multiple matches in the same node',
+    async function () {
+      const tree = create()
+
+      findAndReplace(tree, [/(emph|sis)/g, 'foo'])
+
+      assert.deepEqual(
+        tree,
+        u('paragraph', [
+          u('text', 'Some '),
+          u('emphasis', [u('text', 'foo'), u('text', 'a'), u('text', 'foo')]),
+          u('text', ', '),
+          u('strong', [u('text', 'importance')]),
+          u('text', ', and '),
+          u('inlineCode', 'code'),
+          u('text', '.')
+        ])
+      )
+    }
+  )
 })
 
 function create() {
