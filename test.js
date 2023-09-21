@@ -1,3 +1,7 @@
+/**
+ * @typedef {import('mdast').Root} Root
+ */
+
 import assert from 'node:assert/strict'
 import test from 'node:test'
 import {findAndReplace} from 'mdast-util-find-and-replace'
@@ -372,6 +376,30 @@ test('findAndReplace', async function (t) {
         u('text', '.')
       ])
     )
+  })
+
+  await t.test('should not treat `false` as a match', async function () {
+    /** @type {Root} */
+    const tree = {type: 'root', children: [{type: 'text', value: ':1:2:'}]}
+
+    findAndReplace(tree, [
+      /:(\d+):/g,
+      /**
+       * @param {string} _
+       * @param {string} $1
+       */
+      function (_, $1) {
+        return $1 === '2' ? u('strong', [u('text', $1)]) : false
+      }
+    ])
+
+    assert.deepEqual(tree, {
+      type: 'root',
+      children: [
+        {type: 'text', value: ':1'},
+        {type: 'strong', children: [{type: 'text', value: '2'}]}
+      ]
+    })
   })
 
   await t.test('should not recurse into a replaced value', async function () {
