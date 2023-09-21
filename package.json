@@ -1,6 +1,6 @@
 {
   "name": "mdast-util-find-and-replace",
-  "version": "3.0.0",
+  "version": "3.0.1",
   "description": "mdast utility to find and replace text in a tree",
   "license": "MIT",
   "keywords": [
