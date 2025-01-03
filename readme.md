@@ -12,25 +12,25 @@
 
 ## Contents
 
-*   [What is this?](#what-is-this)
-*   [When should I use this?](#when-should-i-use-this)
-*   [Install](#install)
-*   [Use](#use)
-*   [API](#api)
-    *   [`findAndReplace(tree, list[, options])`](#findandreplacetree-list-options)
-    *   [`Find`](#find)
-    *   [`FindAndReplaceList`](#findandreplacelist)
-    *   [`FindAndReplaceTuple`](#findandreplacetuple)
-    *   [`Options`](#options)
-    *   [`RegExpMatchObject`](#regexpmatchobject)
-    *   [`Replace`](#replace)
-    *   [`ReplaceFunction`](#replacefunction)
-*   [Types](#types)
-*   [Compatibility](#compatibility)
-*   [Security](#security)
-*   [Related](#related)
-*   [Contribute](#contribute)
-*   [License](#license)
+* [What is this?](#what-is-this)
+* [When should I use this?](#when-should-i-use-this)
+* [Install](#install)
+* [Use](#use)
+* [API](#api)
+  * [`findAndReplace(tree, list[, options])`](#findandreplacetree-list-options)
+  * [`Find`](#find)
+  * [`FindAndReplaceList`](#findandreplacelist)
+  * [`FindAndReplaceTuple`](#findandreplacetuple)
+  * [`Options`](#options)
+  * [`RegExpMatchObject`](#regexpmatchobject)
+  * [`Replace`](#replace)
+  * [`ReplaceFunction`](#replacefunction)
+* [Types](#types)
+* [Compatibility](#compatibility)
+* [Security](#security)
+* [Related](#related)
+* [Contribute](#contribute)
+* [License](#license)
 
 ## What is this?
 
@@ -132,13 +132,13 @@ Partial matches are not supported.
 
 ###### Parameters
 
-*   `tree` ([`Node`][node])
-    — tree to change
-*   `list` ([`FindAndReplaceList`][api-find-and-replace-list] or
-    [`FindAndReplaceTuple`][api-find-and-replace-tuple])
-    — one or more find-and-replace pairs
-*   `options` ([`Options`][api-options])
-    — configuration
+* `tree` ([`Node`][node])
+  — tree to change
+* `list` ([`FindAndReplaceList`][api-find-and-replace-list] or
+  [`FindAndReplaceTuple`][api-find-and-replace-tuple])
+  — one or more find-and-replace pairs
+* `options` ([`Options`][api-options])
+  — configuration
 
 ###### Returns
 
@@ -186,8 +186,8 @@ Configuration (TypeScript type).
 
 ###### Fields
 
-*   `ignore` ([`Test`][test], optional)
-    — test for which elements to ignore
+* `ignore` ([`Test`][test], optional)
+  — test for which elements to ignore
 
 ### `RegExpMatchObject`
 
@@ -195,12 +195,12 @@ Info on the match (TypeScript type).
 
 ###### Fields
 
-*   `index` (`number`)
-    — the index of the search at which the result was found
-*   `input` (`string`)
-    — a copy of the search string in the text node
-*   `stack` ([`Array<Node>`][node])
-    — all ancestors of the text node, where the last node is the text itself
+* `index` (`number`)
+  — the index of the search at which the result was found
+* `input` (`string`)
+  — a copy of the search string in the text node
+* `stack` ([`Array<Node>`][node])
+  — all ancestors of the text node, where the last node is the text itself
 
 ### `Replace`
 
@@ -222,21 +222,21 @@ Callback called when a search matches (TypeScript type).
 
 The parameters are the result of corresponding search expression:
 
-*   `value` (`string`)
-    — whole match
-*   `...capture` (`Array<string>`)
-    — matches from regex capture groups
-*   `match` ([`RegExpMatchObject`][api-regexp-match-object])
-    — info on the match
+* `value` (`string`)
+  — whole match
+* `...capture` (`Array<string>`)
+  — matches from regex capture groups
+* `match` ([`RegExpMatchObject`][api-regexp-match-object])
+  — info on the match
 
 ###### Returns
 
 Thing to replace with:
 
-*   when `null`, `undefined`, `''`, remove the match
-*   …or when `false`, do not replace at all
-*   …or when `string`, replace with a text node of that value
-*   …or when `Node` or `Array<Node>`, replace with those nodes
+* when `null`, `undefined`, `''`, remove the match
+* …or when `false`, do not replace at all
+* …or when `string`, replace with a text node of that value
+* …or when `Node` or `Array<Node>`, replace with those nodes
 
 ## Types
 
@@ -266,12 +266,12 @@ so there are no openings for [cross-site scripting (XSS)][xss] attacks.
 
 ## Related
 
-*   [`hast-util-find-and-replace`](https://github.com/syntax-tree/hast-util-find-and-replace)
-    — find and replace in hast
-*   [`hast-util-select`](https://github.com/syntax-tree/hast-util-select)
-    — `querySelector`, `querySelectorAll`, and `matches`
-*   [`unist-util-select`](https://github.com/syntax-tree/unist-util-select)
-    — select unist nodes with CSS-like selectors
+* [`hast-util-find-and-replace`](https://github.com/syntax-tree/hast-util-find-and-replace)
+  — find and replace in hast
+* [`hast-util-select`](https://github.com/syntax-tree/hast-util-select)
+  — `querySelector`, `querySelectorAll`, and `matches`
+* [`unist-util-select`](https://github.com/syntax-tree/unist-util-select)
+  — select unist nodes with CSS-like selectors
 
 ## Contribute
 
