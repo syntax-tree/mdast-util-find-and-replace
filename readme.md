@@ -101,7 +101,7 @@ console.log(inspect(tree))
 
 Yields:
 
-```txt
+```text
 paragraph[8]
 ├─0 link[1]
 │   │ url: "//example.com#Some"
@@ -266,7 +266,7 @@ so there are no openings for [cross-site scripting (XSS)][xss] attacks.
 
 ## Related
 
-* [`hast-util-find-and-replace`](https://github.com/syntax-tree/hast-util-find-and-replace)
+* [`hast-util-find-and-replace`][hast-util-find-and-replace]
   — find and replace in hast
 * [`hast-util-select`](https://github.com/syntax-tree/hast-util-select)
   — `querySelector`, `querySelectorAll`, and `matches`
@@ -289,80 +289,80 @@ abide by its terms.
 
 <!-- Definition -->
 
-[build-badge]: https://github.com/syntax-tree/mdast-util-find-and-replace/workflows/main/badge.svg
-
-[build]: https://github.com/syntax-tree/mdast-util-find-and-replace/actions
-
-[coverage-badge]: https://img.shields.io/codecov/c/github/syntax-tree/mdast-util-find-and-replace.svg
-
-[coverage]: https://codecov.io/github/syntax-tree/mdast-util-find-and-replace
-
-[downloads-badge]: https://img.shields.io/npm/dm/mdast-util-find-and-replace.svg
-
-[downloads]: https://www.npmjs.com/package/mdast-util-find-and-replace
-
-[size-badge]: https://img.shields.io/badge/dynamic/json?label=minzipped%20size&query=$.size.compressedSize&url=https://deno.bundlejs.com/?q=mdast-util-find-and-replace
-
-[size]: https://bundlejs.com/?q=mdast-util-find-and-replace
-
-[sponsors-badge]: https://opencollective.com/unified/sponsors/badge.svg
-
-[backers-badge]: https://opencollective.com/unified/backers/badge.svg
-
-[collective]: https://opencollective.com/unified
-
-[chat-badge]: https://img.shields.io/badge/chat-discussions-success.svg
-
-[chat]: https://github.com/syntax-tree/unist/discussions
-
-[npm]: https://docs.npmjs.com/cli/install
-
-[esm]: https://gist.github.com/sindresorhus/a39789f98801d908bbc7ff3ecc99d99c
-
-[esmsh]: https://esm.sh
-
-[typescript]: https://www.typescriptlang.org
-
-[license]: license
-
-[author]: https://wooorm.com
-
-[health]: https://github.com/syntax-tree/.github
-
-[contributing]: https://github.com/syntax-tree/.github/blob/main/contributing.md
-
-[support]: https://github.com/syntax-tree/.github/blob/main/support.md
-
-[coc]: https://github.com/syntax-tree/.github/blob/main/code-of-conduct.md
-
-[hast]: https://github.com/syntax-tree/hast
-
-[mdast]: https://github.com/syntax-tree/mdast
-
-[node]: https://github.com/syntax-tree/mdast#nodes
-
-[preorder]: https://github.com/syntax-tree/unist#preorder
-
-[text]: https://github.com/syntax-tree/mdast#text
-
-[xss]: https://en.wikipedia.org/wiki/Cross-site_scripting
-
-[test]: https://github.com/syntax-tree/unist-util-is#api
-
-[hast-util-find-and-replace]: https://github.com/syntax-tree/hast-util-find-and-replace
-
-[api-find-and-replace]: #findandreplacetree-list-options
-
-[api-options]: #options
-
 [api-find]: #find
 
-[api-replace]: #replace
-
-[api-replace-function]: #replacefunction
+[api-find-and-replace]: #findandreplacetree-list-options
 
 [api-find-and-replace-list]: #findandreplacelist
 
 [api-find-and-replace-tuple]: #findandreplacetuple
 
+[api-options]: #options
+
 [api-regexp-match-object]: #regexpmatchobject
+
+[api-replace]: #replace
+
+[api-replace-function]: #replacefunction
+
+[author]: https://wooorm.com
+
+[backers-badge]: https://opencollective.com/unified/backers/badge.svg
+
+[build]: https://github.com/syntax-tree/mdast-util-find-and-replace/actions
+
+[build-badge]: https://github.com/syntax-tree/mdast-util-find-and-replace/workflows/main/badge.svg
+
+[chat]: https://github.com/syntax-tree/unist/discussions
+
+[chat-badge]: https://img.shields.io/badge/chat-discussions-success.svg
+
+[coc]: https://github.com/syntax-tree/.github/blob/main/code-of-conduct.md
+
+[collective]: https://opencollective.com/unified
+
+[contributing]: https://github.com/syntax-tree/.github/blob/main/contributing.md
+
+[coverage]: https://codecov.io/github/syntax-tree/mdast-util-find-and-replace
+
+[coverage-badge]: https://img.shields.io/codecov/c/github/syntax-tree/mdast-util-find-and-replace.svg
+
+[downloads]: https://www.npmjs.com/package/mdast-util-find-and-replace
+
+[downloads-badge]: https://img.shields.io/npm/dm/mdast-util-find-and-replace.svg
+
+[esm]: https://gist.github.com/sindresorhus/a39789f98801d908bbc7ff3ecc99d99c
+
+[esmsh]: https://esm.sh
+
+[hast]: https://github.com/syntax-tree/hast
+
+[hast-util-find-and-replace]: https://github.com/syntax-tree/hast-util-find-and-replace
+
+[health]: https://github.com/syntax-tree/.github
+
+[license]: license
+
+[mdast]: https://github.com/syntax-tree/mdast
+
+[node]: https://github.com/syntax-tree/mdast#nodes
+
+[npm]: https://docs.npmjs.com/cli/install
+
+[preorder]: https://github.com/syntax-tree/unist#preorder
+
+[size]: https://bundlejs.com/?q=mdast-util-find-and-replace
+
+[size-badge]: https://img.shields.io/badge/dynamic/json?label=minzipped%20size&query=$.size.compressedSize&url=https://deno.bundlejs.com/?q=mdast-util-find-and-replace
+
+[sponsors-badge]: https://opencollective.com/unified/sponsors/badge.svg
+
+[support]: https://github.com/syntax-tree/.github/blob/main/support.md
+
+[test]: https://github.com/syntax-tree/unist-util-is#api
+
+[text]: https://github.com/syntax-tree/mdast#text
+
+[typescript]: https://www.typescriptlang.org
+
+[xss]: https://en.wikipedia.org/wiki/Cross-site_scripting
