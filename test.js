@@ -221,20 +221,12 @@ test('findAndReplace', async function (t) {
         {type: 'text', value: 'Some '},
         {
           type: 'emphasis',
-          children: [
-            {type: 'text', value: 'e'},
-            {type: 'text', value: '[MP]'},
-            {type: 'text', value: 'hasis'}
-          ]
+          children: [{type: 'text', value: 'e[MP]hasis'}]
         },
         {type: 'text', value: ', '},
         {
           type: 'strong',
-          children: [
-            {type: 'text', value: 'i'},
-            {type: 'text', value: '[MP]'},
-            {type: 'text', value: 'ortance'}
-          ]
+          children: [{type: 'text', value: 'i[MP]ortance'}]
         },
         {type: 'text', value: ', and '},
         {type: 'inlineCode', value: 'code'},
@@ -470,10 +462,7 @@ test('findAndReplace', async function (t) {
 
     assert.deepEqual(tree, {
       type: 'paragraph',
-      children: [
-        {type: 'text', value: 'asd'},
-        {type: 'text', value: '.'}
-      ]
+      children: [{type: 'text', value: 'asd.'}]
     })
   })
 
@@ -561,9 +550,7 @@ test('findAndReplace', async function (t) {
         {type: 'emphasis', children: [{type: 'text', value: 'emphasis'}]},
         {type: 'text', value: ', '},
         {type: 'strong', children: [{type: 'text', value: 'importance'}]},
-        {type: 'text', value: ', '},
-        {type: 'text', value: 'alert(1)'},
-        {type: 'text', value: ' '},
+        {type: 'text', value: ', alert(1) '},
         {type: 'inlineCode', value: 'code'},
         {type: 'text', value: '.'}
       ]
@@ -583,11 +570,7 @@ test('findAndReplace', async function (t) {
           {type: 'text', value: 'Some '},
           {
             type: 'emphasis',
-            children: [
-              {type: 'text', value: 'foo'},
-              {type: 'text', value: 'a'},
-              {type: 'text', value: 'foo'}
-            ]
+            children: [{type: 'text', value: 'fooafoo'}]
           },
           {type: 'text', value: ', '},
           {type: 'strong', children: [{type: 'text', value: 'importance'}]},
