@@ -102,19 +102,17 @@ console.log(inspect(tree))
 Yields:
 
 ```text
-paragraph[8]
+paragraph[6]
 ├─0 link[1]
 │   │ url: "//example.com#Some"
 │   └─0 text "Some"
 ├─1 text " "
 ├─2 emphasis[1]
 │   └─0 text "em"
-├─3 text " "
-├─4 text "or"
-├─5 text " "
-├─6 strong[1]
+├─3 text " or "
+├─4 strong[1]
 │   └─0 text "strong"
-└─7 text "."
+└─5 text "."
 ```
 
 ## API
