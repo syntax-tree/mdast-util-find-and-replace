@@ -185,7 +185,7 @@ Configuration (TypeScript type).
 ###### Fields
 
 * `ignore` ([`Test`][test], optional)
-  — test for which elements to ignore
+  — test for which nodes to ignore
 
 ### `RegExpMatchObject`
 
