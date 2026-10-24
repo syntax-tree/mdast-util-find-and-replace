@@ -8,7 +8,7 @@
     "@types/mdast": "^4.0.0",
     "escape-string-regexp": "^5.0.0",
     "unist-util-is": "^6.0.0",
-    "unist-util-visit-parents": "^6.0.0"
+    "unist-util-visit-parents": "^6.1.0"
   },
   "description": "mdast utility to find and replace text in a tree",
   "devDependencies": {
