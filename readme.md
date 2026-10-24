@@ -207,7 +207,7 @@ Thing to replace with (TypeScript type).
 ###### Type
 
 ```ts
-type Replace = ReplaceFunction | string
+type Replace = ReplaceFunction | string | null | undefined
 ```
 
 See [`ReplaceFunction`][api-replace-function].
