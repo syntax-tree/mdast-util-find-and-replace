@@ -590,6 +590,84 @@ test('findAndReplace', async function (t) {
       })
     }
   )
+
+  await t.test('should support empty matches', async function () {
+    /** @type {Paragraph} */
+    const tree = {type: 'paragraph', children: [{type: 'text', value: 'ab'}]}
+
+    findAndReplace(tree, [/x*/g, '|'])
+
+    assert.deepEqual(tree, {
+      type: 'paragraph',
+      children: [{type: 'text', value: '|a|b|'}]
+    })
+  })
+
+  await t.test('should skip code units w/o `u`', async function () {
+    /** @type {Paragraph} */
+    const tree = {
+      type: 'paragraph',
+      children: [{type: 'text', value: '\u{1F600}'}]
+    }
+
+    findAndReplace(tree, [/x*/g, '|'])
+
+    assert.deepEqual(tree, {
+      type: 'paragraph',
+      children: [{type: 'text', value: '|\u{D83D}|\u{DE00}|'}]
+    })
+  })
+
+  await t.test('should skip code points w/ `u`', async function () {
+    /** @type {Paragraph} */
+    const tree = {
+      type: 'paragraph',
+      children: [{type: 'text', value: '\u{1F600}'}]
+    }
+
+    findAndReplace(tree, [/x*/gu, '|'])
+
+    assert.deepEqual(tree, {
+      type: 'paragraph',
+      children: [{type: 'text', value: '|\u{1F600}|'}]
+    })
+  })
+
+  await t.test('should skip code points w/ `v`', async function () {
+    /** @type {Paragraph} */
+    const tree = {
+      type: 'paragraph',
+      children: [{type: 'text', value: '\u{1F600}'}]
+    }
+
+    // eslint-disable-next-line prefer-regex-literals -- ES2024.
+    findAndReplace(tree, [new RegExp('x*', 'gv'), '|'])
+
+    assert.deepEqual(tree, {
+      type: 'paragraph',
+      children: [{type: 'text', value: '|\u{1F600}|'}]
+    })
+  })
+
+  await t.test('should skip code points w/ `u` and `false`', async function () {
+    /** @type {Paragraph} */
+    const tree = {
+      type: 'paragraph',
+      children: [{type: 'text', value: '\u{1F600}'}]
+    }
+
+    findAndReplace(tree, [
+      /x*/gu,
+      function () {
+        return false
+      }
+    ])
+
+    assert.deepEqual(tree, {
+      type: 'paragraph',
+      children: [{type: 'text', value: '\u{1F600}'}]
+    })
+  })
 })
 
 /**
